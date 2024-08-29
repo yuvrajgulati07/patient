@@ -1,0 +1,167 @@
+<div class="modal fade" id="addPatientModal" tabindex="-1" role="dialog" aria-labelledby="addPatientModalTitle"
+    aria-hidden="true" (hidden.bs.modal)="onModalHidden()">
+
+
+    <div class="modal-dialog modal-dialog-centered " role="form">
+
+        <div class="modal-content ">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title text-primary" id="exampleModalLongTitle">
+                    <i class="fa-solid fa-plus"></i>
+                    {{ updateMode ? 'Edit Patient' : 'Add Patient' }}
+                </h5>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="addPatientForm" (submit)="updateMode ? onUpdatePatient() : onSubmitAddPatient()" autocomplete="off">
+
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label mb-2 text-muted" for="patientFirstName">Patient First Name <span
+                                    class="text-danger fs-5">*</span></label>
+                            <input id="patientFirstName" type="text"  
+                                class="form-control mb-2 form-control-lg bg-light fs-6" name="patientFirstName"
+                                formControlName="patientFirstName" placeholder="Enter Patient First Name" autofocus
+                                value="Prashant" />
+
+                            <span class="text-danger" *ngIf="
+                        addPatientForm.get('patientFirstName')?.touched &&
+                        addPatientForm.get('patientFirstName')?.hasError('required')
+                      ">* UserName Field is required</span>
+
+                            <span class="text-danger" *ngIf="
+                        addPatientForm.get('patientFirstName')?.touched &&
+                        addPatientForm.get('patientFirstName')?.hasError('pattern')
+                      ">* Patient Firstname should only contains alphabets</span>
+                        </div>
+
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label mb-2 text-muted" for="patientLastName">Patient Last Name <span
+                                    class="text-danger fs-5">*</span></label>
+                            <input id="patientLastName" type="text"
+                                class="form-control mb-2 form-control-lg bg-light fs-6" name="patientLastName"
+                                formControlName="patientLastName" placeholder="Enter Patient Last Name" autofocus />
+
+                            <span class="text-danger" *ngIf="
+                        addPatientForm.get('patientLastName')?.touched &&
+                        addPatientForm.get('patientLastName')?.hasError('required')
+                      ">* UserName Field is required</span>
+
+                            <span class="text-danger" *ngIf="
+                        addPatientForm.get('patientLastName')?.touched &&
+                        addPatientForm.get('patientLastName')?.hasError('pattern')
+                      ">* Lastname should only contains alphabets</span>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3 col-md-6 d-flex flex-column">
+                            <label for="patientMobileNumber" class="form-label mb-2 text-muted">Patient Phone Number
+                                <span class="text-danger fs-5">*</span></label>
+
+                            <input name="patientMobileNumber" id="patientMobileNumber"
+                                class="form-control mb-2 form-label bg-light fx-6" formControlName="patientMobileNumber"
+                                prefix="+91 " [showMaskTyped]="true" type="text" mask="(000)-000-0000" />
+
+                            <span class="text-danger" *ngIf="
+                            addPatientForm.get('patientMobileNumber')?.touched &&
+                            addPatientForm.get('patientMobileNumber')?.hasError('required')
+                          ">* User Phone Number Field is required</span>
+                        </div>
+
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label mb-2 text-muted" for="dropDownInput">Patient Gender <span
+                                    class="text-danger fs-5">*</span></label>
+                            <select id="dropDownInput" class="form-select user_select" name="patientGender"
+                                formControlName="patientGender">
+                                <option value="Male" selected>Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Others">Others</option>
+                            </select>
+
+                            <span class="text-danger" *ngIf="
+                        addPatientForm.get('patientGender')?.touched &&
+                        addPatientForm.get('patientGender')?.hasError('required')
+                      ">* Gender Field is required</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label mb-2 text-muted" for="dropDownInput">Country <span
+                                    class="text-danger fs-5">*</span></label>
+                            <select id="dropDownInput" class="form-select user_select" name="patientCountry"
+                                formControlName="patientCountry">
+                                <option value="" disabled selected>Select your Country</option>
+                                <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
+                            </select>
+
+                            <span class="text-danger" *ngIf="
+                        addPatientForm.get('patientCountry')?.touched &&
+                        addPatientForm.get('patientCountry')?.hasError('required')
+                      ">* Country Field is required</span>
+                        </div>
+
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label mb-2 text-muted" for="dropDownInput">State <span
+                                    class="text-danger fs-5">*</span></label>
+                            <select id="dropDownInput" class="form-select user_select" name="patientState"
+                                formControlName="patientState">
+                                <option value="" disabled selected>Select your State</option>
+                                <option *ngFor="let state of filteredStates" [value]="state.name">{{ state.name }}</option>
+                            </select>
+
+                            <span class="text-danger" *ngIf="
+                        addPatientForm.get('patientState')?.touched &&
+                        addPatientForm.get('patientState')?.hasError('required')
+                      ">* State Field is required</span>
+                        </div>
+                    </div>
+
+
+
+                    <div class="mb-3">
+                        <label for="patientStreetAddress" class="form-label mb-2 text-muted">Patient Street Address
+                            <span class="text-danger fs-5">*</span></label>
+                        <textarea name="patientStreetAddress" id="patientStreetAddress"
+                            placeholder="Enter the student address"
+                            class="form-control mb-2 form-control-lg bg-light fs-6"
+                            formControlName="patientStreetAddress" rows="2"></textarea>
+
+                        <span class="text-danger" *ngIf="
+                      addPatientForm.get('patientStreetAddress')?.touched &&
+                      addPatientForm.get('patientStreetAddress')?.hasError('required')
+                    ">* Patient Street Address Field is required</span>
+                    </div>
+
+                    <hr>
+                    <div class="d-flex justify-content-end gap-4">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="addPatientForm.invalid"
+                            data-bs-dismiss="modal">
+                            {{ updateMode ? 'Update Patient' : 'Add Patient' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- <div class="main d-flex justify-content-center pt-3 pb-3">
+    <div class="main_content row border rounded-5 p-2 bg-white shadow box-area">
+        <div class="col-md-12 wrapper_box">
+            <div class="row align-items-center">
+                <div class="header-text mb-4">
+                    <h2>Register User</h2>
+                    <p>User, fill your details</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
